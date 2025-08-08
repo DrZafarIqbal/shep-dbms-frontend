@@ -49,15 +49,32 @@ const LambingList = () => {
         initialData={editing || {}}
         buttonLabel={editing ? "Update Lambing" : "Add Lambing"}
       />
-      <ul>
-        {lambings.map((item) => (
-          <li key={item.id}>
-            Dam: {item.dam_branding_id}, Sire: {item.sire_branding_id || 'Unknown'}, Date: {item.lambing_date}
-            <button onClick={() => setEditing(item)}>Edit</button>
-            <button onClick={() => deleteLambing(item.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+
+      <table border="1" cellPadding="8" style={{ marginTop: '20px', width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Dam Branding ID</th>
+            <th>Sire Branding ID</th>
+            <th>Lambing Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lambings.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.dam_branding_id}</td>
+              <td>{item.sire_branding_id || 'Unknown'}</td>
+              <td>{item.lambing_date}</td>
+              <td>
+                <button onClick={() => setEditing(item)}>Edit</button>{' '}
+                <button onClick={() => deleteLambing(item.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

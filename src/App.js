@@ -31,7 +31,7 @@ function App() {
           <Route path="/wool" element={<WoolRecordsPage />} />
           <Route path="/mortality" element={<MortalityPage />} />
           <Route path="/transfers" element={<TransfersPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </div>
