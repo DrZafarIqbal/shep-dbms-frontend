@@ -1,42 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const BreedForm = ({ onSubmit, initialData = {}, buttonLabel = "Add Breed" }) => {
-  const [formData, setFormData] = useState({
-    name: initialData.name || '',
-    description: initialData.description || ''
-  });
+export default function BreedForm({
+  initialData = { name: '', description: '' },
+  buttonLabel = 'Add Breed',
+  onSubmit,
+  onCancel,
+}) {
+  const [form, setForm] = useState(initialData);
+
+  useEffect(() => {
+    setForm(initialData);
+  }, [initialData]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    setFormData({ name: '', description: '' });
+    onSubmit?.(form);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>{buttonLabel}</h3>
-      <input
-        type="text"
-        name="name"
-        value={formData.name}
-        placeholder="Breed Name"
-        onChange={handleChange}
-        required
-      />
-      <textarea
-        name="description"
-        value={formData.description}
-        placeholder="Description"
-        onChange={handleChange}
-      />
-      <button type="submit">{buttonLabel}</button>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
+      <div style={{ display: 'grid', gap: 8, maxWidth: 520 }}>
+        <input
+          name="name"
+          placeholder="Breed name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={form.description}
+          onChange={handleChange}
+          rows={3}
+        />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit">{buttonLabel}</button>
+          {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
+        </div>
+      </div>
     </form>
   );
-};
-
-export default BreedForm;
-
+}

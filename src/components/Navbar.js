@@ -1,11 +1,22 @@
-// src/components/Navbar.jsx
+// src/App.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
 
-export default function Navbar() {
+import FarmsPage from './pages/FarmsPage';
+import BreedsPage from './pages/BreedsPage';   // <-- add this
+
+export default function App() {
   return (
-    <nav style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #eee' }}>
-      <Link to="/farms">Farms</Link>
-    </nav>
+    <div className="App">
+      <Navbar />
+      <div style={{ padding: '1rem' }}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/farms" replace />} />
+          <Route path="/farms" element={<FarmsPage />} />
+          <Route path="/breeds" element={<BreedsPage />} />  {/* <-- add this */}
+        </Routes>
+      </div>
+    </div>
   );
 }
