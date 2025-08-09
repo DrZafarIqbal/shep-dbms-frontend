@@ -1,65 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import FarmForm from './FarmForm';
+import React from 'react';
 
-const FarmList = () => {
-  const [farms, setFarms] = useState([]);
-  const [editingFarm, setEditingFarm] = useState(null);
-
-  const fetchFarms = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/farms`);
-    const data = await response.json();
-    setFarms(data);
-  };
-
-  const addFarm = async (farm) => {
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/farms`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(farm),
-    });
-    fetchFarms();
-  };
-
-  const updateFarm = async (farm) => {
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/farms/${editingFarm.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(farm),
-    });
-    setEditingFarm(null);
-    fetchFarms();
-  };
-
-  const deleteFarm = async (id) => {
-    await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/farms/${id}`, {
-      method: 'DELETE'
-    });
-    fetchFarms();
-  };
-
-  useEffect(() => {
-    fetchFarms();
-  }, []);
+export default function FarmList({ farms = [], onEdit, onDelete }) {
+  if (!farms.length) return <p>No farms yet.</p>;
 
   return (
-    <div>
-      <h2>Farms</h2>
-      <FarmForm
-        onSubmit={editingFarm ? updateFarm : addFarm}
-        initialData={editingFarm || {}}
-        buttonLabel={editingFarm ? "Update Farm" : "Add Farm"}
-      />
-      <ul>
-        {farms.map((farm) => (
-          <li key={farm.id}>
-            {farm.name} — {farm.location} — {farm.manager_name} — {farm.contact_info}
-            <button onClick={() => setEditingFarm(farm)}>Edit</button>
-            <button onClick={() => deleteFarm(farm.id)}>Delete</button>
-          </li>
+    <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse', minWidth: 600 }}>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Manager</th>
+          <th>Contact</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {farms.map((f) => (
+          <tr key={f.id}>
+            <td>{f.name}</td>
+            <td>{f.location}</td>
+            <td>{f.manager_name}</td>
+            <td>{f.contact_info}</td>
+            <td>
+              <button onClick={() => onEdit?.(f)}>Edit</button>{' '}
+              <button onClick={() => onDelete?.(f.id)}>Delete</button>
+            </td>
+          </tr>
         ))}
-      </ul>
-    </div>
+      </tbody>
+    </table>
   );
-};
-
-export default FarmList;
+}

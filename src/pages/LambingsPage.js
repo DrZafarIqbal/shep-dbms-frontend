@@ -2,14 +2,12 @@ import React from 'react';
 import LambingForm from '../components/LambingForm';
 import LambingList from '../components/LambingList';
 
-function LambingsPage() {
+export default function LambingsPage() {
   return (
     <div>
-      <h2>Lambings</h2>
+      <h1>Lambings</h1>
       <LambingForm />
       <LambingList />
     </div>
   );
 }
-
-export default LambingsPage;

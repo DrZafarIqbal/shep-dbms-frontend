@@ -1,33 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const FarmForm = ({ onSubmit, initialData = {}, buttonLabel = "Add Farm" }) => {
-  const [formData, setFormData] = useState({
-    name: initialData.name || '',
-    location: initialData.location || '',
-    manager_name: initialData.manager_name || '',
-    contact_info: initialData.contact_info || ''
-  });
+export default function FarmForm({
+  initialData = { name: '', location: '', manager_name: '', contact_info: '' },
+  buttonLabel = 'Add Farm',
+  onSubmit,
+  onCancel,
+}) {
+  const [form, setForm] = useState(initialData);
+
+  useEffect(() => {
+    setForm(initialData);
+  }, [initialData]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    setFormData({ name: '', location: '', manager_name: '', contact_info: '' });
+    onSubmit(form);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>{buttonLabel}</h3>
-      <input type="text" name="name" value={formData.name} placeholder="Farm Name" onChange={handleChange} required />
-      <input type="text" name="location" value={formData.location} placeholder="Location" onChange={handleChange} />
-      <input type="text" name="manager_name" value={formData.manager_name} placeholder="Manager Name" onChange={handleChange} />
-      <input type="text" name="contact_info" value={formData.contact_info} placeholder="Contact Info" onChange={handleChange} />
-      <button type="submit">{buttonLabel}</button>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
+      <div style={{ display: 'grid', gap: 8, maxWidth: 520 }}>
+        <input
+          name="name"
+          placeholder="Farm name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="location"
+          placeholder="Location"
+          value={form.location}
+          onChange={handleChange}
+        />
+        <input
+          name="manager_name"
+          placeholder="Manager name"
+          value={form.manager_name}
+          onChange={handleChange}
+        />
+        <input
+          name="contact_info"
+          placeholder="Contact info"
+          value={form.contact_info}
+          onChange={handleChange}
+        />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit">{buttonLabel}</button>
+          {onCancel && (
+            <button type="button" onClick={onCancel}>Cancel</button>
+          )}
+        </div>
+      </div>
     </form>
   );
-};
-
-export default FarmForm;
+}
