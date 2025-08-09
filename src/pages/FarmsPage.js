@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from 'react';
+// src/pages/FarmsPage.js
+import React, { useEffect, useState, useCallback } from 'react';
 import FarmForm from '../components/FarmForm';
 import FarmList from '../components/FarmList';
 
 export default function FarmsPage() {
   const [editingFarm, setEditingFarm] = useState(null);
   const [farms, setFarms] = useState([]);
-
   const API = process.env.REACT_APP_API_BASE_URL;
 
-  const loadFarms = async () => {
+  // Memoize to satisfy react-hooks/exhaustive-deps in CI
+  const loadFarms = useCallback(async () => {
     const res = await fetch(`${API}/api/farms`);
     const data = await res.json();
     setFarms(data);
-  };
+  }, [API]);
 
-  useEffect(() => { loadFarms(); }, []); // load once
+  useEffect(() => {
+    loadFarms(); // runs once in production
+  }, [loadFarms]);
 
   const handleCreate = async (payload) => {
     await fetch(`${API}/api/farms`, {
@@ -45,17 +48,12 @@ export default function FarmsPage() {
   return (
     <div>
       <h2>Farms</h2>
-
       <FarmForm
         initialData={editingFarm || { name: '', location: '', manager_name: '', contact_info: '' }}
         buttonLabel={editingFarm ? 'Update Farm' : 'Add Farm'}
-        onSubmit={(form) => {
-          if (editingFarm) return handleUpdate(editingFarm.id, form);
-          return handleCreate(form);
-        }}
+        onSubmit={(form) => (editingFarm ? handleUpdate(editingFarm.id, form) : handleCreate(form))}
         onCancel={() => setEditingFarm(null)}
       />
-
       <FarmList
         farms={farms}
         onEdit={(farm) => setEditingFarm(farm)}
