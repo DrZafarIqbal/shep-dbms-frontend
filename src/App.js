@@ -2,7 +2,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
+
 import FarmsPage from './pages/FarmsPage';
+import BreedsPage from './pages/BreedsPage';
 
 export default function App() {
   return (
@@ -10,8 +12,15 @@ export default function App() {
       <Navbar />
       <div style={{ padding: '1rem' }}>
         <Routes>
+          {/* Default → Farms */}
           <Route path="/" element={<Navigate to="/farms" replace />} />
+
+          {/* Pages */}
           <Route path="/farms" element={<FarmsPage />} />
+          <Route path="/breeds" element={<BreedsPage />} />
+
+          {/* (optional) catch-all → Farms */}
+          <Route path="*" element={<Navigate to="/farms" replace />} />
         </Routes>
       </div>
     </div>

@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 
-export default function BreedForm({
-  initialData = { name: '', description: '' },
-  buttonLabel = 'Add Breed',
-  onSubmit,
-  onCancel,
-}) {
-  const [form, setForm] = useState(initialData);
+const empty = { name: '', description: '' };
+
+export default function BreedForm({ editing, onSubmit, onCancel }) {
+  const [form, setForm] = useState(empty);
+  const isEdit = Boolean(editing);
 
   useEffect(() => {
-    setForm(initialData);
-  }, [initialData]);
+    if (isEdit) {
+      setForm({
+        name: editing?.name ?? '',
+        description: editing?.description ?? '',
+        id: editing?.id,
+      });
+    } else {
+      setForm(empty);
+    }
+  }, [isEdit, editing]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,30 +25,43 @@ export default function BreedForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit?.(form);
+    onSubmit(form);
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
-      <div style={{ display: 'grid', gap: 8, maxWidth: 520 }}>
+    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 8, maxWidth: 520 }}>
+      <h2 style={{ margin: 0 }}>{isEdit ? 'Update Breed' : 'Add Breed'}</h2>
+
+      <label>
+        Name
         <input
+          type="text"
           name="name"
-          placeholder="Breed name"
           value={form.name}
           onChange={handleChange}
           required
+          style={{ width: '100%', padding: 8, marginTop: 4 }}
         />
+      </label>
+
+      <label>
+        Description
         <textarea
           name="description"
-          placeholder="Description"
           value={form.description}
           onChange={handleChange}
           rows={3}
+          style={{ width: '100%', padding: 8, marginTop: 4 }}
         />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="submit">{buttonLabel}</button>
-          {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
-        </div>
+      </label>
+
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button type="submit">{isEdit ? 'Save Changes' : 'Add Breed'}</button>
+        {isEdit && (
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
       </div>
     </form>
   );
