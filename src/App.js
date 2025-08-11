@@ -7,6 +7,8 @@ import FarmsPage from './pages/FarmsPage';
 import BreedsPage from './pages/BreedsPage';
 import BrandingList from './components/BrandingList';
 import LambingList from './components/LambingList';
+import LambsList from './components/LambList';
+import GrowthList from './components/GrowthList';
 export default function App() {
   return (
     <div className="App">
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/breeds" element={<BreedsPage />} />
           <Route path="/branding" element={<BrandingList />} />
           <Route path="/lambings" element={<LambingList />} />
+          <Route path="/lambs" element={<LambsList />} />
+          <Route path="/growth" element={<GrowthList />} />
 
           {/* (optional) catch-all → Farms */}
           <Route path="*" element={<Navigate to="/farms" replace />} />
@@ -29,4 +33,5 @@ export default function App() {
     </div>
   );
 }
+
 
